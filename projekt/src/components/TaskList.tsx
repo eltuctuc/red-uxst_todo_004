@@ -10,6 +10,7 @@ interface TaskListProps {
   onUpdate: (id: string, newTitle: string) => void
   onCancelEdit: () => void
   onDelete: (id: string) => void
+  onToggle: (id: string) => void
 }
 
 export function TaskList({
@@ -19,13 +20,14 @@ export function TaskList({
   onUpdate,
   onCancelEdit,
   onDelete,
+  onToggle,
 }: TaskListProps) {
   if (tasks.length === 0) {
     return <TaskEmpty />
   }
 
   return (
-    <ul className="task-list">
+    <ul className="task-list" role="list">{/* BUG-FEAT1-UX-010 fix: explizite Listenrolle – Safari/VoiceOver entfernt list-Rolle bei list-style:none */}
       {tasks.map((task) => (
         <TaskItem
           key={task.id}
@@ -35,6 +37,7 @@ export function TaskList({
           onUpdate={onUpdate}
           onCancelEdit={onCancelEdit}
           onDelete={onDelete}
+          onToggle={onToggle}
         />
       ))}
     </ul>

@@ -35,7 +35,7 @@
 
 .task-item__edit-input {
   flex: 1;
-  font-size: var(--text-sm);
+  font-size: var(--text-base); /* BUG-FEAT1-UX-005 fix: war var(--text-sm), verhindert Layout-Shift beim Edit-Wechsel */
   line-height: var(--leading-normal);
   font-family: var(--font-family-base);
   color: var(--color-text-primary);
@@ -57,8 +57,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  min-width: 44px; /* BUG-FEAT1-UX-009 fix: WCAG 2.5.5 touch target min. 44x44px */
+  min-height: 44px;
   padding: 0;
   border: none;
   border-radius: var(--radius-md);
@@ -81,4 +81,9 @@
 .task-item__delete:active {
   background: var(--color-error-100);
   color: var(--color-error-700);
+}
+
+.task-item__title--completed {
+  text-decoration: line-through;
+  color: var(--color-text-disabled);
 }

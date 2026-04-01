@@ -1,7 +1,7 @@
 # FEAT-2: Task-Status
 
 ## Status
-Aktueller Schritt: Tech
+Aktueller Schritt: Dev
 
 ## Abhängigkeiten
 - Benötigt: FEAT-1 (Task-CRUD) – Status-Toggle setzt eine bestehende Task-Liste voraus
@@ -210,3 +210,21 @@ Keine neuen Packages. Die Checkbox wird als reine React-Komponente mit CSS gebau
   - Keyboard: Tab zur Checkbox → Space zum Toggeln → Status wechselt
 
 Test-Framework: Vitest + React Testing Library (wie FEAT-1).
+
+## 4. Implementierung
+*Ausgefüllt von: /red:proto-dev — 2026-04-02*
+
+### Implementierte Dateien
+- `projekt/src/types.ts` – Task-Interface um `completed: boolean` erweitert
+- `projekt/src/components/Checkbox.tsx` – Neue Checkbox-Komponente (Tokens-Build, native `<input>` für A11y, custom visual overlay)
+- `projekt/src/components/Checkbox.css` – Tokens-basierte Styles: unchecked/checked/hover/focus-Zustände
+- `projekt/src/components/TaskItem.tsx` – Checkbox als Leading-Element, `onToggle`-Callback, `.task-item__title--completed` für Strikethrough
+- `projekt/src/components/TaskItem.css` – `.task-item__title--completed` Klasse (line-through + color-text-disabled)
+- `projekt/src/components/TaskList.tsx` – `onToggle`-Prop durchgereicht an TaskItem
+- `projekt/src/components/TaskPage.tsx` – `handleToggle` Handler (`prev.map + !completed`), `completed: false` beim Anlegen
+
+### Installierte Dependencies
+Keine neuen Packages.
+
+### Offene Punkte / Tech-Debt
+- `color-primary-400` ist kein definierter DS-Token → Hover-Border der Checkbox nutzt `color-primary-300` als nächstnäheren verfügbaren Token

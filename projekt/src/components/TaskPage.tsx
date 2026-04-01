@@ -13,6 +13,7 @@ export function TaskPage() {
       id: crypto.randomUUID(),
       title,
       createdAt: Date.now(),
+      completed: false,
     }
     setTasks((prev) => [...prev, newTask])
   }
@@ -31,6 +32,14 @@ export function TaskPage() {
     }
   }
 
+  const handleToggle = (id: string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    )
+  }
+
   const handleStartEdit = (id: string) => {
     setEditingId(id)
   }
@@ -46,14 +55,18 @@ export function TaskPage() {
           <h1 className="task-page__title">Aufgaben</h1>
         </header>
         <TaskCreate onAdd={handleAdd} />
-        <TaskList
-          tasks={tasks}
-          editingId={editingId}
-          onStartEdit={handleStartEdit}
-          onUpdate={handleUpdate}
-          onCancelEdit={handleCancelEdit}
-          onDelete={handleDelete}
-        />
+        {/* BUG-FEAT1-UX-007 fix: Card-Body-Wrapper gemäß DS-Spec card.md */}
+        <div className="task-page__card-body">
+          <TaskList
+            tasks={tasks}
+            editingId={editingId}
+            onStartEdit={handleStartEdit}
+            onUpdate={handleUpdate}
+            onCancelEdit={handleCancelEdit}
+            onDelete={handleDelete}
+            onToggle={handleToggle}
+          />
+        </div>
       </div>
     </div>
   )
