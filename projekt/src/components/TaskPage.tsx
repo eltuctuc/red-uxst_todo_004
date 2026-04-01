@@ -39,12 +39,6 @@ export function TaskPage() {
   // BUG-FEAT3-UX-001: Show notice when localStorage data was unrecoverable
   const [showResetNotice, setShowResetNotice] = useState(wasReset)
 
-  useEffect(() => {
-    if (!showResetNotice) return
-    const timer = setTimeout(() => setShowResetNotice(false), 8000)
-    return () => clearTimeout(timer)
-  }, [showResetNotice])
-
   const handleAdd = (title: string) => {
     const newTask: Task = {
       id: crypto.randomUUID(),
