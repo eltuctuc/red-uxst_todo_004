@@ -1,7 +1,7 @@
 # FEAT-1: Task-CRUD
 
 ## Status
-Aktueller Schritt: Spec
+Aktueller Schritt: UX
 
 ## Abhängigkeiten
 - Benötigt: Keine
@@ -53,3 +53,78 @@ Der Nutzer kann Tasks mit einem Titel anlegen, in einer Liste anzeigen, den Tite
 - Mehrfachauswahl oder Bulk-Aktionen
 - Undo/Redo nach Löschen
 - Tastaturkürzel über Enter/ESC hinaus
+
+---
+
+## 2. UX Entscheidungen
+*Ausgefüllt von: /red:proto-ux — 2026-04-01*
+
+### Einbettung im Produkt
+Alle CRUD-Interaktionen leben auf dem einzigen Screen S-01 (Task-Liste).
+Route: `/`
+
+### Einstiegspunkte
+Direkter App-Start – S-01 ist der einzige Einstiegspunkt.
+
+### User Flow
+
+```
+App-Start
+    ↓
+S-01: Task-Liste – leeres Create-Input sichtbar
+    ↓ Titel tippen + Enter
+Task erscheint in Liste, Input wird geleert
+    ↓ Klick auf Task-Titel
+Inline-Edit-Zustand: Input mit aktuellem Titel, fokussiert
+    ↓ Enter (nicht leer) / ESC / Blur
+Titel gespeichert (Enter) oder verworfen (ESC/Blur)
+    ↓ Klick auf Delete-Button
+Task sofort aus Liste entfernt
+```
+
+### Interaktionsmuster
+- **Primärmuster:** Liste + Inline-Editing — Referenz: `design-system/patterns/datenanzeige.md` (Einfache Liste)
+- **Fehler-Handling:** Kein sichtbares Feedback bei blockiertem Submit (leerer Titel) – Submit macht schlicht nichts
+- **Leerer Zustand:** Nur das Create-Input sichtbar, keine Liste, kein Empty-State-Hinweis nötig (Placeholder im Input reicht)
+- **Ladeverhalten:** Kein Ladezustand – alle Operationen sind synchron/lokal
+
+### Eingesetzte Komponenten
+
+| Komponente  | DS-Status       | Quelle                                       | Verwendung                                    |
+|-------------|-----------------|----------------------------------------------|-----------------------------------------------|
+| Input       | ✓ Vorhanden     | design-system/components/input.md            | Create-Feld (Variante: `default`, Size: `md`) |
+| Input       | ✓ Vorhanden     | design-system/components/input.md            | Inline-Edit-Zustand (Variante: `default`, Size: `sm`) |
+| Button      | ✓ Vorhanden     | design-system/components/button.md           | Delete-Aktion (Variante: `danger`, icon-only, Size: `sm`) |
+| Card        | ✓ Vorhanden     | design-system/components/card.md             | App-Wrapper/Container (Variante: `default`) |
+| TaskItem    | ⚠ Tokens-Build  | Kein Spec – List-Pattern als Referenz        | Listenzeile: Titel (klickbar) + Delete-Button; genehmigt 2026-04-01 |
+
+### Screen Transitions (verbindlich)
+
+Keine Screen-zu-Screen-Transitions – alle Interaktionen sind Zustandswechsel auf S-01.
+Vollständige Zustandstabelle in `flows/product-flows.md` (Abschnitt "Zustandswechsel auf S-01").
+
+| Von                       | Trigger                    | Wohin                              | Bedingung                    |
+|---------------------------|----------------------------|------------------------------------|------------------------------|
+| Input-Feld (gefüllt)      | Enter                      | Input geleert, Task in Liste       | Titel nicht leer/Whitespace  |
+| Input-Feld (leer)         | Enter                      | Keine Änderung                     | Submit blockiert             |
+| Task (normal)             | Klick auf Titel            | Task im Inline-Edit-Zustand        | –                            |
+| Task im Inline-Edit       | Enter (Titel nicht leer)   | Task normal, neuer Titel           | –                            |
+| Task im Inline-Edit       | Enter (Titel leer)         | Keine Änderung                     | Submit blockiert             |
+| Task im Inline-Edit       | ESC                        | Task normal, Original-Titel        | –                            |
+| Task im Inline-Edit       | Blur                       | Task normal, Original-Titel        | –                            |
+| Task (beliebig)           | Klick auf Delete-Button    | Task aus Liste entfernt            | –                            |
+
+*(Eingetragen in flows/product-flows.md)*
+
+### DS-Status dieser Implementierung
+- **Konforme Komponenten:** Input, Button, Card
+- **Neue Komponenten (Tokens-Build, genehmigt):** TaskItem (List-Pattern Referenz)
+- **Bewusste Abweichungen (Hypothesentest):** –
+
+### Barrierefreiheit (A11y)
+- **Keyboard-Navigation:** Tab zwischen Create-Input und Task-Elementen; Enter/ESC im Inline-Edit; Delete-Button per Tab erreichbar und per Enter/Space auslösbar
+- **Screen Reader:** Create-Input mit `aria-label="Neue Aufgabe"` (kein sichtbares Label nötig, da Placeholder kontextuell ausreicht – Ausnahme der DS-Regel für Prototyp explizit akzeptiert); Delete-Button als icon-only immer mit `aria-label="[Titel] löschen"`; Inline-Edit-Input mit `aria-label="Titel bearbeiten"`
+- **Farbkontrast:** Alle Text/Hintergrund-Kombinationen über DS-Tokens – Referenz: `design-system/tokens/colors.md`
+
+### Mobile-Verhalten
+- Out-of-Scope laut PRD (Desktop-only). Kein responsives Verhalten definiert.
