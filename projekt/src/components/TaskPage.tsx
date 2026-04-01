@@ -1,11 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Task } from '../types'
 import { TaskCreate } from './TaskCreate'
 import { TaskList } from './TaskList'
 import './TaskPage.css'
 
+const STORAGE_KEY = 'ux-stammtisch-tasks'
+
+function loadTasksFromStorage(): Task[] {
+  const raw = localStorage.getItem(STORAGE_KEY)
+  if (raw === null) return []
+  try {
+    return JSON.parse(raw) as Task[]
+  } catch {
+    localStorage.removeItem(STORAGE_KEY)
+    return []
+  }
+}
+
 export function TaskPage() {
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<Task[]>(loadTasksFromStorage)
   const [editingId, setEditingId] = useState<string | null>(null)
 
   const handleAdd = (title: string) => {
@@ -47,6 +60,10 @@ export function TaskPage() {
   const handleCancelEdit = () => {
     setEditingId(null)
   }
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+  }, [tasks])
 
   return (
     <div className="task-page">

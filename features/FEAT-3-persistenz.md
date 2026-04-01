@@ -1,7 +1,7 @@
 # FEAT-3: Persistenz
 
 ## Status
-Aktueller Schritt: Tech
+Aktueller Schritt: Dev
 
 ## Abhängigkeiten
 - Benötigt: FEAT-1 (Task-CRUD) – Task-Datenstruktur muss definiert sein
@@ -189,3 +189,17 @@ Keine. `localStorage` ist eine native Browser-API.
   - Corrupt Recovery: localStorage manuell auf ungültiges JSON setzen → App laden → leere Liste, kein Fehler
 
 Test-Framework: Vitest + React Testing Library (wie FEAT-1/2). localStorage kann in Tests via `vi.stubGlobal` oder JSDOM gemockt werden.
+
+---
+
+## 4. Implementierung
+*Ausgefüllt von: /red:proto-dev — 2026-04-02*
+
+### Implementierte Dateien
+- `projekt/src/components/TaskPage.tsx` – State-Initialisierung aus localStorage (lazy initializer) + `useEffect` für automatisches Speichern nach jeder Mutation
+
+### Installierte Dependencies
+Keine – `localStorage` ist native Browser-API.
+
+### Offene Punkte / Tech-Debt
+Keine.
