@@ -62,8 +62,8 @@
   border-color: var(--color-primary-600);
 }
 
-/* Focus-Ring via native input focus-visible */
-.checkbox__input:focus-visible + .checkbox__box {
+/* Focus-Ring via native input focus-visible – BUG-FEAT2-QA-006 fix: ~ statt + (label-text span liegt zwischen input und box) */
+.checkbox__input:focus-visible ~ .checkbox__box {
   outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }

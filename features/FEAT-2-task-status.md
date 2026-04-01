@@ -1,7 +1,7 @@
 # FEAT-2: Task-Status
 
 ## Status
-Aktueller Schritt: Dev
+Aktueller Schritt: Done
 
 ## Abhängigkeiten
 - Benötigt: FEAT-1 (Task-CRUD) – Status-Toggle setzt eine bestehende Task-Liste voraus
@@ -232,7 +232,7 @@ Keine neuen Packages.
 ---
 
 ## 5. QA Ergebnisse
-*Ausgefüllt von: /red:proto-qa — 2026-04-02*
+*Ausgefüllt von: /red:proto-qa — 2026-04-02 (Runde 3: Retest nach Bug-Fix-Runde 2)*
 
 ### Acceptance Criteria Status
 - [x] AC-1: Jeder Task zeigt eine Checkbox links des Titels ✅
@@ -243,26 +243,45 @@ Keine neuen Packages.
 - [x] AC-6: Löschen unabhängig vom Status ✅
 
 ### Security-Check
-Kein Befund. Boolean-Toggle ist immutabel implementiert, kein XSS-Risiko.
+Kein Befund. Boolean-Toggle ist immutabel implementiert (`prev.map + !completed`), kein XSS-Risiko.
 
 ### A11y-Check
-- aria-label dynamisch korrekt implementiert ✅
-- Keyboard-Navigation (Tab + Space) funktioniert ✅
-- Probleme: Touch Target zu klein (BUG-FEAT2-QA-001), Hover-Kontrast unter 3:1 (BUG-FEAT2-QA-002), prefers-reduced-motion fehlt (BUG-FEAT2-UX-003), Titeltext-Kontrast zu niedrig (BUG-FEAT2-UX-005)
+- Touch Target 44×44px korrekt implementiert ✅ (nach Fix QA-001)
+- Hover-Border-Kontrast WCAG 1.4.11-konform ✅ (nach Fix QA-002)
+- prefers-reduced-motion in Checkbox.css vorhanden ✅ (nach Fix UX-003)
+- Titel-Kontrast color-text-secondary ~7.3:1 ✅ (nach Fix UX-005)
+- useId() + htmlFor/id-Binding korrekt implementiert ✅ (nach Fix QA-005)
+- prefers-reduced-motion in TaskItem.css vorhanden ✅ (nach Fix UX-007)
+- Motion Tokens in TaskItem.css korrekt ✅ (nach Fix UX-006/QA-004)
+- Offen: Checkbox Focus-Ring CSS-Selektor gebrochen durch QA-005-Fix → BUG-FEAT2-QA-006
 
-### Offene Bugs
-- BUG-FEAT2-QA-001 – Checkbox Touch Target zu klein (Medium)
-- BUG-FEAT2-QA-002 – Hover-Border-Kontrast unter WCAG 1.4.11 (Medium)
-- BUG-FEAT2-QA-003 – Strikethrough-Übergang ohne Transition (Low)
-- BUG-FEAT2-UX-001 – Checkmark-Farbe hardcoded statt Token (Medium)
-- BUG-FEAT2-UX-002 – Transitions hardcoded statt Motion-Tokens (Medium)
-- BUG-FEAT2-UX-003 – prefers-reduced-motion nicht beachtet (Medium)
-- BUG-FEAT2-UX-004 – Hover-Border color-primary-300 zu schwach (Low)
-- BUG-FEAT2-UX-005 – Durchgestrichener Titel verfehlt Mindestkontrast 3:1 (Medium)
+### Behobene Bugs (Runde 1)
+- ✅ BUG-FEAT2-QA-001 – Checkbox Touch Target zu klein → Fixed
+- ✅ BUG-FEAT2-QA-002 – Hover-Border-Kontrast unter WCAG 1.4.11 → Fixed
+- ✅ BUG-FEAT2-UX-001 – Checkmark-Farbe hardcoded statt Token → Fixed
+- ✅ BUG-FEAT2-UX-002 – Transitions hardcoded (Checkbox.css gefixt, Regression in TaskItem.css → QA-004/UX-006)
+- ✅ BUG-FEAT2-UX-003 – prefers-reduced-motion fehlend (Checkbox.css gefixt, Regression in TaskItem.css → UX-007)
+- ✅ BUG-FEAT2-UX-004 – Hover-Border color-primary-300 zu schwach → Fixed
+- ✅ BUG-FEAT2-UX-005 – Durchgestrichener Titel verfehlt Mindestkontrast → Fixed
+
+### Behobene Bugs (Runde 2)
+- ✅ BUG-FEAT2-QA-004 – Motion-Token-Fix unvollständig: TaskItem.css hardcoded 0.15s → Fixed
+- ✅ BUG-FEAT2-QA-005 – Checkbox label/aria-label Kombination fragil in AT → Fixed
+- ✅ BUG-FEAT2-UX-006 – TaskItem.css hardcoded 0.15s statt Motion-Tokens → Fixed
+- ✅ BUG-FEAT2-UX-007 – TaskItem.css kein prefers-reduced-motion → Fixed
+
+### Behobene Bugs (Runde 3)
+- ✅ BUG-FEAT2-QA-006 – Focus-Ring CSS-Selektor gebrochen → Fixed (+ → ~ in Checkbox.css)
+
+### Offene Bugs (nach Runde 3)
+- BUG-FEAT2-QA-003 – Strikethrough-Übergang ohne Transition (Low) – Nice-to-have
+- BUG-FEAT2-UX-008 – Falscher Kontrast-Kommentar in Checkbox.css (Low) – Nice-to-have
+- BUG-FEAT2-UX-009 – Spec-Divergenz: color-text-secondary statt color-text-disabled (Low) – Nice-to-have
 
 ### Summary
 - ✅ 6/6 Acceptance Criteria passed
-- ❌ 8 Bugs (0 Critical, 0 High, 6 Medium, 2 Low)
+- ✅ 0 Critical, 0 High Bugs
+- ⚠ 3 Low Bugs (Nice-to-have, kein Blocker)
 
 ### Production-Ready
-❌ NOT Ready – 6 Medium-Bugs offen (A11y + DS-Compliance), alle auf "Fix before release"
+✅ Ready – keine Critical oder High Bugs offen
