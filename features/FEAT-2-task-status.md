@@ -23,6 +23,7 @@ Der Nutzer kann jeden Task als erledigt markieren und diese Markierung wieder au
 - Als Nutzer möchte ich einen Task per Checkbox-Klick als erledigt markieren, um meinen Fortschritt sichtbar zu machen.
 - Als Nutzer möchte ich einen erledigten Task per erneutem Checkbox-Klick als offen markieren, um Fehler oder Planänderungen zu korrigieren.
 - Als Nutzer möchte ich erledigte Tasks visuell unterscheiden (Strikethrough + Checkbox angehakt), ohne sie ausblenden zu müssen.
+- Als Nutzer möchte ich auf einen Blick sehen welche Tasks noch offen sind, um mich auf die verbleibende Arbeit zu konzentrieren.
 
 ### Acceptance Criteria
 - [ ] Jeder Task zeigt eine Checkbox links des Titels.

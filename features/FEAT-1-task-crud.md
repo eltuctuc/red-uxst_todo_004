@@ -37,6 +37,7 @@ Der Nutzer kann Tasks mit einem Titel anlegen, in einer Liste anzeigen, den Tite
 - [ ] Ein Klick ausserhalb des aktiven Input-Felds (Blur) verwirft die Änderung – der Original-Titel bleibt erhalten.
 - [ ] Zu jeder Zeit ist maximal ein Task im Inline-Edit-Zustand.
 - [ ] Jeder Task hat eine Lösch-Aktion (z. B. Button oder Icon), die den Task sofort aus der Liste entfernt.
+- [ ] Ein Task kann vom Tippen des Titels bis zur Anzeige in der Liste in unter 2 Sekunden erstellt werden (Erfolgskriterium aus Problem Statement).
 
 ### Edge Cases
 - **Leerer Titel beim Erstellen:** Enter bei leerem oder Whitespace-only-Eingabefeld macht nichts – kein Task wird angelegt.
@@ -44,6 +45,7 @@ Der Nutzer kann Tasks mit einem Titel anlegen, in einer Liste anzeigen, den Tite
 - **Blur bei unverändertem Inhalt:** Wenn der Nutzer ins Feld klickt, nichts ändert und dann Blur auslöst, bleibt der Titel unverändert (kein Dirty-Flag nötig).
 - **Löschen während aktiver Bearbeitung:** Löscht der Nutzer einen Task, der gerade bearbeitet wird (z. B. über Keyboard-Navigation), wird der Task sofort entfernt.
 - **Sehr langer Titel:** Titel werden nicht auf eine Maximal-Länge begrenzt; das UI macht den Text wrappable oder truncated (visuell, nicht funktional kritisch).
+- **Leere Liste (Empty State):** Bei null Tasks wird ein Hinweistext angezeigt (z. B. „Noch keine Aufgaben – leg los!") plus das sichtbare Create-Input.
 
 ### Nicht im Scope
 - Status-Toggle (erledigt / offen) → FEAT-2
@@ -85,7 +87,7 @@ Task sofort aus Liste entfernt
 ### Interaktionsmuster
 - **Primärmuster:** Liste + Inline-Editing — Referenz: `design-system/patterns/datenanzeige.md` (Einfache Liste)
 - **Fehler-Handling:** Kein sichtbares Feedback bei blockiertem Submit (leerer Titel) – Submit macht schlicht nichts
-- **Leerer Zustand:** Nur das Create-Input sichtbar, keine Liste, kein Empty-State-Hinweis nötig (Placeholder im Input reicht)
+- **Leerer Zustand:** Hinweistext (z. B. „Noch keine Aufgaben – leg los!") + sichtbares Create-Input (Research: „Hinweistext + Eingabefeld sichtbar")
 - **Ladeverhalten:** Kein Ladezustand – alle Operationen sind synchron/lokal
 
 ### Eingesetzte Komponenten

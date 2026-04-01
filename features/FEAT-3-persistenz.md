@@ -24,6 +24,7 @@ Alle Tasks inkl. ihrer Status-Werte werden automatisch im localStorage des Brows
 ### User Stories
 - Als Nutzer möchte ich dass meine Tasks nach einem Seiten-Reload noch vorhanden sind, damit ich die App schließen und später weitermachen kann.
 - Als Nutzer möchte ich dass Änderungen (Erstellen, Bearbeiten, Löschen, Status-Toggle) sofort gespeichert werden, ohne einen Speichern-Button drücken zu müssen.
+- Als Nutzer möchte ich die App beim ersten Start ohne Konfiguration sofort nutzen können, damit kein Setup-Overhead entsteht.
 
 ### Acceptance Criteria
 - [ ] Alle Tasks (Titel + Status) werden nach jeder Änderung automatisch im localStorage gespeichert.
