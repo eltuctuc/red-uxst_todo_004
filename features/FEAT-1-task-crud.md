@@ -1,7 +1,7 @@
 # FEAT-1: Task-CRUD
 
 ## Status
-Aktueller Schritt: UX
+Aktueller Schritt: Tech
 
 ## Abhängigkeiten
 - Benötigt: Keine
@@ -130,3 +130,99 @@ Vollständige Zustandstabelle in `flows/product-flows.md` (Abschnitt "Zustandswe
 
 ### Mobile-Verhalten
 - Out-of-Scope laut PRD (Desktop-only). Kein responsives Verhalten definiert.
+
+---
+
+## 3. Technisches Design
+*Ausgefüllt von: /red:proto-architect — 2026-04-02*
+
+### Component-Struktur
+
+```
+App
+└── TaskPage                          ← neuer Container, ersetzt Vite-Scaffold
+    ├── Card                          ← DS: card.md (Variante: default)
+    │   ├── TaskCreate                ← Create-Input + Enter-Handler
+    │   │   └── Input                 ← DS: input.md (default, md)
+    │   ├── TaskList                  ← rendert Array von TaskItem oder Empty State
+    │   │   └── TaskItem (×n)         ← Tokens-Build: Titel (klickbar) + Delete-Button
+    │   │       ├── [Anzeige-Modus]   ← Titel als <span>, klickbar
+    │   │       │   └── Button        ← DS: button.md (danger, icon-only, sm) – Delete
+    │   │       └── [Edit-Modus]      ← Input (DS: default, sm) + Enter/ESC/Blur-Handler
+    │   └── TaskEmpty                 ← Hinweistext bei leerer Liste
+    └── (kein weiterer Screen)
+```
+
+**Wiederverwendbar aus DS:**
+- `Input` — design-system/components/input.md
+- `Button` — design-system/components/button.md
+- `Card` — design-system/components/card.md
+
+**Neu zu bauen (Tokens-Build):**
+- `TaskPage` — Layout-Container, ersetzt das Vite-Scaffold in App.tsx
+- `TaskCreate` — Eingabe-Logik für neue Tasks
+- `TaskList` — Listenrendering + Empty State
+- `TaskItem` — Zeile mit Anzeige-/Edit-Modus und Delete-Button
+- `TaskEmpty` — Hinweistext „Noch keine Aufgaben – leg los!"
+
+### Daten-Model
+
+Ein **Task** besteht aus:
+- **id** — eindeutiger Identifier (generiert beim Erstellen, z.B. via `crypto.randomUUID()`)
+- **title** — nicht-leerer String (Pflichtfeld)
+- **createdAt** — Zeitstempel der Erstellung (für stabile Sortierung nach Erstellungsreihenfolge)
+
+Gespeichert in: **React State** (`useState` in `TaskPage`). Kein externer State-Manager nötig – ein einzelner Screen, ein Datentyp, keine Seiteneffekte. FEAT-3 wird die Persistenz nachrüsten.
+
+Das Task-Array wird als Single Source of Truth in `TaskPage` gehalten und per Props an Kinder weitergegeben.
+
+### API / Daten-Fluss
+
+Kein Backend, kein API. Alle Operationen sind synchrone State-Mutationen:
+
+- **Create:** `TaskCreate` ruft Callback `onAdd(title)` auf → `TaskPage` erzeugt neues Task-Objekt und hängt es ans Array an
+- **Update:** `TaskItem` ruft Callback `onUpdate(id, newTitle)` auf → `TaskPage` ersetzt den Titel im Array
+- **Delete:** `TaskItem` ruft Callback `onDelete(id)` auf → `TaskPage` filtert Task aus Array
+
+Datenfluss ist strikt **top-down** (Props + Callbacks), kein Context, kein globaler Store.
+
+### Tech-Entscheidungen
+
+- **Kein State-Management-Library:** Bei einem Screen mit einem Datentyp ist `useState` ausreichend. Overhead von Zustand/Redux wäre unverhältnismäßig.
+- **`crypto.randomUUID()` für IDs:** Nativ in allen modernen Browsern, keine Dependency nötig. Stabil genug für Client-only State.
+- **Kein separates Types-File:** Der Task-Typ wird als `interface` in einer Datei `types.ts` im `src/`-Verzeichnis definiert – minimale Struktur, die bei FEAT-2/3 mitwächst.
+- **CSS Modules oder App.css:** Styling über die bestehende `App.css` bzw. komponentenspezifische CSS-Dateien – kein Tailwind oder CSS-in-JS (hält den Prototyp einfach und nahe am DS).
+
+### Security-Anforderungen
+
+- **Authentifizierung:** Keine – öffentliche lokale App ohne Backend.
+- **Autorisierung:** Keine Rollen – Single-User-App.
+- **Input-Validierung:** Title wird vor dem Speichern getrimmt und auf non-empty geprüft (sowohl Create als auch Edit). Kein HTML in Titeln nötig – React escaped JSX-Output automatisch (XSS-safe).
+- **OWASP-relevante Punkte:** Kein Backend, kein API, keine Datenbank → kein SQL-Injection, kein CSRF. XSS durch React-Default-Escaping abgedeckt. Keine Secrets, keine Cookies.
+
+### Dependencies
+
+Keine neuen Packages nötig. Alles wird mit React-Bordmitteln und nativen Browser-APIs gebaut:
+- `useState` für State
+- `crypto.randomUUID()` für IDs
+- Standard-DOM-Events für Keyboard/Focus-Handling
+
+### Test-Setup
+
+- **Unit Tests:**
+  - Task-Erstellung: leerer Titel blockiert, gültiger Titel erzeugt Task
+  - Task-Update: leerer Titel blockiert, gültiger Titel wird übernommen
+  - Task-Delete: Task wird aus Liste entfernt
+  - Edge Case: maximal ein Task gleichzeitig im Edit-Modus
+
+- **Integration Tests:**
+  - Vollständiger Create-Flow: Titel eingeben → Enter → Task in Liste sichtbar → Input leer
+  - Inline-Edit-Flow: Klick → Titel ändern → Enter → neuer Titel angezeigt
+  - ESC/Blur-Abbruch: Änderung wird verworfen, Original-Titel bleibt
+  - Delete während Edit: Task wird trotzdem entfernt
+
+- **E2E Tests:**
+  - Happy Path: App öffnen → 3 Tasks erstellen → einen bearbeiten → einen löschen → korrekter Endzustand
+  - Empty State: App öffnen → Hinweistext sichtbar → Task erstellen → Hinweistext verschwindet
+
+Test-Framework: Vitest (kommt mit Vite) + React Testing Library für Component-Tests.
