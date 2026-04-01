@@ -26,6 +26,7 @@ export function TaskCreate({ onAdd }: TaskCreateProps) {
       <input
         className="task-create__input"
         type="text"
+        name="new-task"
         placeholder="Neue Aufgabe..."
         aria-label="Neue Aufgabe"
         value={value}

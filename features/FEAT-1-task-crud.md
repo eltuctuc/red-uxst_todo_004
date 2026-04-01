@@ -1,7 +1,7 @@
 # FEAT-1: Task-CRUD
 
 ## Status
-Aktueller Schritt: Dev
+Aktueller Schritt: QA
 
 ## Abhängigkeiten
 - Benötigt: Keine
@@ -121,7 +121,8 @@ Vollständige Zustandstabelle in `flows/product-flows.md` (Abschnitt "Zustandswe
 ### DS-Status dieser Implementierung
 - **Konforme Komponenten:** Input, Button, Card
 - **Neue Komponenten (Tokens-Build, genehmigt):** TaskItem (List-Pattern Referenz)
-- **Bewusste Abweichungen (Hypothesentest):** –
+- **Bewusste Abweichungen (Hypothesentest):**
+  - Delete-Button löscht sofort ohne Bestätigung (DS-Regel: Danger-Button mit Confirm-Dialog). Begründung: Single-User-Prototyp, kein kritischer Datenverlust, schnelle Interaktion priorisiert. Kein Undo in Scope (explizit out-of-scope in FEAT-1 Spec).
 
 ### Barrierefreiheit (A11y)
 - **Keyboard-Navigation:** Tab zwischen Create-Input und Task-Elementen; Enter/ESC im Inline-Edit; Delete-Button per Tab erreichbar und per Enter/Space auslösbar
@@ -252,3 +253,69 @@ Test-Framework: Vitest (kommt mit Vite) + React Testing Library für Component-T
 
 ### Offene Punkte / Tech-Debt
 - TaskItem ist ein Tokens-Build (keine DS-Komponenten-Spec) – dokumentiert in UX-Abschnitt als genehmigt
+
+---
+
+## 5. QA Ergebnisse
+*Ausgefüllt von: /red:proto-qa — 2026-04-02 (3. Runde – Retest nach 2. Bug-Fix-Sprint)*
+
+### Acceptance Criteria Status
+- [x] AC-1: Task per Enter erstellen (Placeholder „Neue Aufgabe...") ✅
+- [x] AC-2: Nach Erstellen ist Input leer ✅
+- [x] AC-3: Leerer/Whitespace-Titel blockiert Create ✅
+- [x] AC-4: Tasks in Erstellungsreihenfolge angezeigt ✅
+- [x] AC-5: Klick auf Titel aktiviert Inline-Edit (fokussiert) ✅
+- [x] AC-6: Enter im Edit speichert neuen Titel ✅
+- [x] AC-7: ESC verwirft Änderung ✅
+- [x] AC-8: Blur verwirft Änderung ✅ (außer Tab-Pfad → BUG-FEAT1-QA-008)
+- [x] AC-9: Maximal ein Task im Edit-Zustand gleichzeitig ✅
+- [x] AC-10: Lösch-Aktion entfernt Task sofort ✅
+- [x] AC-11: Performance < 2 Sekunden ✅
+
+### Security-Check
+Keine Befunde. React JSX escaped automatisch, kein `dangerouslySetInnerHTML`, kein Backend, kein SQL, kein CSRF. Input-Validierung (trim + non-empty) korrekt. XSS-sicher.
+
+### A11y-Check
+- `aria-label="Neue Aufgabe"` am Create-Input: ✅
+- `aria-label="[Titel] löschen"` am Delete-Button: ✅ (dynamisch)
+- `aria-label="Titel bearbeiten"` am Edit-Input: ✅
+- `aria-label` auf Span (Edit-Trigger): ✅ (BUG-FEAT1-QA-003 gefixt)
+- Focus-Ring: ✅ (BUG-FEAT1-UX-004 gefixt – overflow: clip)
+- Tab Edit→Delete direkt: ✅ (BUG-FEAT1-QA-004/007 gefixt)
+- Tab Edit→Delete→Tab weiter: ❌ → BUG-FEAT1-QA-008 (Medium)
+- `<ul>` ohne aria-label: ❌ → BUG-FEAT1-QA-005 (Low)
+- Kein `<main>`-Landmark: ❌ → BUG-FEAT1-QA-009 (Low)
+- Delete-Button touch target 32px: ❌ → BUG-FEAT1-UX-009 (Medium)
+- Safari VoiceOver Listenrolle: ❌ → BUG-FEAT1-UX-010 (Medium)
+
+### Fixes bestätigt (1. + 2. Bug-Fix-Sprint, keine Regressionen)
+- ✅ BUG-FEAT1-QA-001 – useEffect-Fix (High): Dependency-Array korrekt
+- ✅ BUG-FEAT1-QA-002 – Blur-nach-Enter (Medium): isSavingRef-Flag korrekt
+- ✅ BUG-FEAT1-QA-003 – Span aria-label (Medium): dynamisches Label gesetzt
+- ✅ BUG-FEAT1-QA-004 – Tab vor Delete (Medium): relatedTarget-Check korrekt
+- ✅ BUG-FEAT1-QA-006 – focus() bei title-Change (Low): Begleitfix von QA-001
+- ✅ BUG-FEAT1-QA-007 – Delete per Keyboard (Medium): Tab Edit→Delete möglich
+- ✅ BUG-FEAT1-UX-001 – DS-Abweichung dokumentiert (Medium): als Hypothesentest eingetragen
+- ✅ BUG-FEAT1-UX-002 – Card overflow-Fix (Medium): teilweise behoben → Rest → UX-007
+- ✅ BUG-FEAT1-UX-003 – name-Attribut (Medium): gesetzt
+- ✅ BUG-FEAT1-UX-004 – Focus-Ring (Medium): overflow: clip
+- ✅ BUG-FEAT1-UX-005 – Font-Size-Sprung (Medium): einheitlich var(--text-base)
+
+### Fixes bestätigt (3. Bug-Fix-Sprint)
+- ✅ BUG-FEAT1-QA-008 – Edit-Modus ghost-aktiv (Medium): onBlur auf Delete-Button → onCancelEdit() wenn Fokus wegtabbt
+- ✅ BUG-FEAT1-UX-007 – Card-Body-Wrapper (Medium): task-page__card-body eingefügt, spacing-6 korrekt
+- ✅ BUG-FEAT1-UX-009 – Touch Target (Medium): min-width/height: 44px
+- ✅ BUG-FEAT1-UX-010 – Safari VoiceOver Listenrolle (Medium): role="list" auf `<ul>`
+
+### Offene Bugs
+- BUG-FEAT1-QA-005 – Task-Liste ohne semantische Beschriftung (Low)
+- BUG-FEAT1-QA-009 – Kein `<main>`-Landmark in TaskPage.tsx (Low)
+- BUG-FEAT1-UX-006 – Delete-Button Danger-Semantik nur bei Hover (Low)
+- BUG-FEAT1-UX-008 – autocomplete-Attribut fehlt an Inputs (Low)
+
+### Summary
+- ✅ 11/11 Acceptance Criteria passed
+- ❌ 4 Bugs (0 Critical, 0 High, 0 Medium, 4 Low)
+
+### Production-Ready
+✅ Ready – Keine Critical oder High Bugs offen. 4 Low-Bugs bekannt, alle "Nice-to-have".

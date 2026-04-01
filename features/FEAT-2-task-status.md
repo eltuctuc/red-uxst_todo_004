@@ -228,3 +228,41 @@ Keine neuen Packages.
 
 ### Offene Punkte / Tech-Debt
 - `color-primary-400` ist kein definierter DS-Token → Hover-Border der Checkbox nutzt `color-primary-300` als nächstnäheren verfügbaren Token
+
+---
+
+## 5. QA Ergebnisse
+*Ausgefüllt von: /red:proto-qa — 2026-04-02*
+
+### Acceptance Criteria Status
+- [x] AC-1: Jeder Task zeigt eine Checkbox links des Titels ✅
+- [x] AC-2: Klick auf Checkbox (offen) → checked + Strikethrough ✅
+- [x] AC-3: Klick auf Checkbox (erledigt) → unchecked, kein Strikethrough ✅
+- [x] AC-4: Toggle ändert Listenposition nicht ✅
+- [x] AC-5: Titelediting ändert Status nicht ✅
+- [x] AC-6: Löschen unabhängig vom Status ✅
+
+### Security-Check
+Kein Befund. Boolean-Toggle ist immutabel implementiert, kein XSS-Risiko.
+
+### A11y-Check
+- aria-label dynamisch korrekt implementiert ✅
+- Keyboard-Navigation (Tab + Space) funktioniert ✅
+- Probleme: Touch Target zu klein (BUG-FEAT2-QA-001), Hover-Kontrast unter 3:1 (BUG-FEAT2-QA-002), prefers-reduced-motion fehlt (BUG-FEAT2-UX-003), Titeltext-Kontrast zu niedrig (BUG-FEAT2-UX-005)
+
+### Offene Bugs
+- BUG-FEAT2-QA-001 – Checkbox Touch Target zu klein (Medium)
+- BUG-FEAT2-QA-002 – Hover-Border-Kontrast unter WCAG 1.4.11 (Medium)
+- BUG-FEAT2-QA-003 – Strikethrough-Übergang ohne Transition (Low)
+- BUG-FEAT2-UX-001 – Checkmark-Farbe hardcoded statt Token (Medium)
+- BUG-FEAT2-UX-002 – Transitions hardcoded statt Motion-Tokens (Medium)
+- BUG-FEAT2-UX-003 – prefers-reduced-motion nicht beachtet (Medium)
+- BUG-FEAT2-UX-004 – Hover-Border color-primary-300 zu schwach (Low)
+- BUG-FEAT2-UX-005 – Durchgestrichener Titel verfehlt Mindestkontrast 3:1 (Medium)
+
+### Summary
+- ✅ 6/6 Acceptance Criteria passed
+- ❌ 8 Bugs (0 Critical, 0 High, 6 Medium, 2 Low)
+
+### Production-Ready
+❌ NOT Ready – 6 Medium-Bugs offen (A11y + DS-Compliance), alle auf "Fix before release"

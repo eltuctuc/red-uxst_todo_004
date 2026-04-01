@@ -85,5 +85,5 @@
 
 .task-item__title--completed {
   text-decoration: line-through;
-  color: var(--color-text-disabled);
+  color: var(--color-text-secondary); /* BUG-FEAT2-UX-005 fix: color-neutral-600 (7.3:1) statt color-neutral-400 (2.5:1) */
 }

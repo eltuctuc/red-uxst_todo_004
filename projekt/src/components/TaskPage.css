@@ -14,11 +14,16 @@
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  overflow: hidden;
+  overflow: clip; /* BUG-FEAT1-UX-002/004 fix: war overflow:hidden – blockierte Focus-Outlines; clip clipped visuell für border-radius ohne Outline zu unterdrücken */
 }
 
 .task-page__header {
-  padding: var(--spacing-6) var(--spacing-4) var(--spacing-4);
+  padding: var(--spacing-6) var(--spacing-6) var(--spacing-4); /* BUG-FEAT1-UX-002 fix: horizontales Padding auf var(--spacing-6) angeglichen – konsistent mit DS-Card-Spec */
+}
+
+/* BUG-FEAT1-UX-007 fix: Card-Body gemäß DS-Spec card.md */
+.task-page__card-body {
+  padding: var(--spacing-6);
 }
 
 .task-page__title {

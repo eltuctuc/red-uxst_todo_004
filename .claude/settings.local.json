@@ -7,7 +7,27 @@
       "Bash(npm install:*)",
       "Bash(git branch:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git tag:*)",
+      "Bash(gh auth:*)",
+      "Bash(gh repo:*)",
+      "Bash(git push:*)",
+      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/design-system/components/*.md)",
+      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/design-system/patterns/*.md)",
+      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/research/*.md)",
+      "Bash(ls /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/design-system/screens/*/)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(git -C /Users/enricoreinsdorf/Projekte/ux-stammtisch_004 log --oneline -15)",
+      "Bash(git -C /Users/enricoreinsdorf/Projekte/ux-stammtisch_004 diff --name-only HEAD~1)",
+      "Bash(mv BUG-FEAT1-QA-001.md BUG-FEAT1-QA-001-fixed.md)",
+      "Bash(mv BUG-FEAT1-QA-002.md BUG-FEAT1-QA-002-fixed.md)",
+      "Bash(mv BUG-FEAT1-QA-003.md BUG-FEAT1-QA-003-fixed.md)",
+      "Bash(mv BUG-FEAT1-QA-004.md BUG-FEAT1-QA-004-fixed.md)",
+      "Bash(mv BUG-FEAT1-QA-006.md BUG-FEAT1-QA-006-fixed.md)",
+      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/features/FEAT-2*.md)",
+      "Bash(git -C /Users/enricoreinsdorf/Projekte/ux-stammtisch_004 log --oneline -5)",
+      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/projekt/src/components/*.tsx)"
     ]
   },
   "disabledMcpjsonServers": [

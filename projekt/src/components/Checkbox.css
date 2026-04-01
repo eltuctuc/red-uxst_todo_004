@@ -1,8 +1,11 @@
 .checkbox {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   cursor: pointer;
+  min-width: 44px; /* BUG-FEAT2-QA-001 fix: WCAG 2.5.5 touch target min. 44x44px */
+  min-height: 44px;
 }
 
 /* Native input hidden – a11y bleibt erhalten */
@@ -27,7 +30,7 @@
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-default);
   background: var(--color-neutral-0);
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: var(--transition-border), var(--transition-bg); /* BUG-FEAT2-UX-002 fix: Motion Tokens statt hardcoded 0.15s */
 }
 
 .checkbox__box--checked {
@@ -35,9 +38,9 @@
   border-color: var(--color-primary-500);
 }
 
-/* Hover: unchecked */
+/* Hover: unchecked – BUG-FEAT2-QA-002 fix: color-primary-500 statt color-primary-300 (Kontrast 4.5:1 statt 1.9:1) */
 .checkbox:hover .checkbox__box:not(.checkbox__box--checked) {
-  border-color: var(--color-primary-300);
+  border-color: var(--color-primary-500);
 }
 
 /* Hover: checked */
@@ -50,4 +53,16 @@
 .checkbox__input:focus-visible + .checkbox__box {
   outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
+}
+
+/* BUG-FEAT2-UX-001 fix: Checkmark-Farbe via currentColor + Token */
+.checkbox__box svg {
+  color: var(--color-text-on-primary);
+}
+
+/* BUG-FEAT2-UX-003 fix: prefers-reduced-motion – Transitions deaktivieren */
+@media (prefers-reduced-motion: reduce) {
+  .checkbox__box {
+    transition: none;
+  }
 }
