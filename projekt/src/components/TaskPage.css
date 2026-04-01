@@ -26,6 +26,50 @@
   padding: var(--spacing-6);
 }
 
+/* BUG-FEAT3-UX-001: Alert-Banner bei Silent Reset */
+.task-page__reset-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-6);
+  background: var(--color-warning-100);
+  border-bottom: 1px solid var(--color-warning-500);
+}
+
+.task-page__reset-notice-text {
+  font-size: var(--text-sm);
+  color: var(--color-warning-700);
+  line-height: var(--leading-normal);
+}
+
+.task-page__reset-notice-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-warning-700);
+  font-size: var(--text-lg);
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+}
+
+.task-page__reset-notice-close:hover {
+  background: var(--color-warning-500);
+  color: var(--color-neutral-0);
+}
+
+.task-page__reset-notice-close:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
 .task-page__title {
   font-size: var(--text-2xl);
   font-weight: var(--font-weight-semibold);

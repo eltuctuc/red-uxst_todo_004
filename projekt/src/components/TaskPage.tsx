@@ -6,20 +6,44 @@ import './TaskPage.css'
 
 const STORAGE_KEY = 'ux-stammtisch-tasks'
 
-function loadTasksFromStorage(): Task[] {
+function loadTasksFromStorage(): { tasks: Task[]; wasReset: boolean } {
   const raw = localStorage.getItem(STORAGE_KEY)
-  if (raw === null) return []
+  if (raw === null) return { tasks: [], wasReset: false }
   try {
-    return JSON.parse(raw) as Task[]
+    const parsed = JSON.parse(raw)
+    // BUG-FEAT3-QA-001: JSON.parse can return valid JSON that isn't an array
+    if (!Array.isArray(parsed)) {
+      localStorage.removeItem(STORAGE_KEY)
+      return { tasks: [], wasReset: true }
+    }
+    // BUG-FEAT3-QA-002: Filter out task objects missing required fields
+    const validTasks = parsed.filter(
+      (item): item is Task =>
+        typeof item === 'object' &&
+        item !== null &&
+        typeof item.id === 'string' &&
+        typeof item.title === 'string' &&
+        typeof item.completed === 'boolean'
+    )
+    return { tasks: validTasks, wasReset: false }
   } catch {
     localStorage.removeItem(STORAGE_KEY)
-    return []
+    return { tasks: [], wasReset: true }
   }
 }
 
 export function TaskPage() {
-  const [tasks, setTasks] = useState<Task[]>(loadTasksFromStorage)
+  const [{ tasks: loadedTasks, wasReset }] = useState(loadTasksFromStorage)
+  const [tasks, setTasks] = useState<Task[]>(loadedTasks)
   const [editingId, setEditingId] = useState<string | null>(null)
+  // BUG-FEAT3-UX-001: Show notice when localStorage data was unrecoverable
+  const [showResetNotice, setShowResetNotice] = useState(wasReset)
+
+  useEffect(() => {
+    if (!showResetNotice) return
+    const timer = setTimeout(() => setShowResetNotice(false), 8000)
+    return () => clearTimeout(timer)
+  }, [showResetNotice])
 
   const handleAdd = (title: string) => {
     const newTask: Task = {
@@ -68,6 +92,21 @@ export function TaskPage() {
   return (
     <div className="task-page">
       <div className="task-page__card">
+        {/* BUG-FEAT3-UX-001: Alert-Banner bei Silent Reset */}
+        {showResetNotice && (
+          <div className="task-page__reset-notice" role="alert">
+            <span className="task-page__reset-notice-text">
+              Gespeicherte Aufgaben konnten nicht geladen werden.
+            </span>
+            <button
+              className="task-page__reset-notice-close"
+              onClick={() => setShowResetNotice(false)}
+              aria-label="Hinweis schließen"
+            >
+              ×
+            </button>
+          </div>
+        )}
         <header className="task-page__header">
           <h1 className="task-page__title">Aufgaben</h1>
         </header>

@@ -4,7 +4,7 @@
 - **Severity:** Low
 - **Bereich:** A11y
 - **Gefunden von:** UX Reviewer
-- **Status:** Open
+- **Status:** Fixed — 2026-04-02 — Hover-Border auf `color-primary-500` geaendert (via BUG-FEAT2-QA-002 Fix in Checkbox.css). Kontrast nun ca. 3.0:1, erfuellt WCAG 1.4.11 Mindestanforderung. Beachte: Kommentar-Wert (4.5:1) im Code ist faktisch falsch – siehe BUG-FEAT2-UX-008.
 
 ## Problem
 
