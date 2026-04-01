@@ -1,7 +1,7 @@
 # FEAT-2: Task-Status
 
 ## Status
-Aktueller Schritt: UX
+Aktueller Schritt: Tech
 
 ## Abhängigkeiten
 - Benötigt: FEAT-1 (Task-CRUD) – Status-Toggle setzt eine bestehende Task-Liste voraus
@@ -129,3 +129,84 @@ Vollständige Zustandstabelle in `flows/product-flows.md` (Abschnitt "Zustandswe
 
 ### Mobile-Verhalten
 - Out-of-Scope laut PRD (Desktop-only). Kein responsives Verhalten definiert.
+
+---
+
+## 3. Technisches Design
+*Ausgefüllt von: /red:proto-architect — 2026-04-02*
+
+### Component-Struktur
+
+FEAT-2 erweitert die bestehende FEAT-1-Struktur – keine neuen Container oder Seiten.
+
+```
+TaskPage (aus FEAT-1)
+└── Card
+    ├── TaskCreate (unverändert)
+    ├── TaskList (unverändert)
+    │   └── TaskItem (erweitert)
+    │       ├── Checkbox              ← NEU: Tokens-Build, leading
+    │       ├── [Anzeige-Modus]       ← Titel + conditional Strikethrough
+    │       │   └── Button (Delete)
+    │       └── [Edit-Modus]          ← unverändert aus FEAT-1
+    └── TaskEmpty (unverändert)
+```
+
+**Wiederverwendbar aus FEAT-1:**
+- Gesamte Seitenstruktur, TaskCreate, TaskList, TaskEmpty bleiben unverändert
+
+**Neu zu bauen (Tokens-Build):**
+- `Checkbox` — Custom-Komponente nach UX-Tokens-Spec (18×18px, SVG-Checkmark, Hover/Focus-States)
+
+**Zu erweitern:**
+- `TaskItem` — Checkbox als Leading-Element einfügen; bedingtes Strikethrough + `color-text-disabled` bei Status `erledigt`
+
+### Daten-Model
+
+Erweiterung des Task-Objekts aus FEAT-1:
+- **id** — (aus FEAT-1)
+- **title** — (aus FEAT-1)
+- **createdAt** — (aus FEAT-1)
+- **completed** — Boolean, Standardwert `false`. `true` = erledigt, `false` = offen.
+
+Gespeichert in: **React State** (gleicher `useState` in `TaskPage` wie FEAT-1). Das Task-Interface in `types.ts` wird um das Feld `completed` erweitert.
+
+### API / Daten-Fluss
+
+Kein Backend. Eine zusätzliche synchrone State-Mutation:
+
+- **Toggle:** `TaskItem` ruft Callback `onToggle(id)` auf → `TaskPage` invertiert `completed` im Array
+
+Datenfluss bleibt strikt top-down (Props + Callbacks). `onToggle` wird neben `onUpdate` und `onDelete` als weiterer Callback an `TaskItem` übergeben.
+
+### Tech-Entscheidungen
+
+- **Custom Checkbox statt `<input type="checkbox">`:** Die UX-Spec definiert eigene Tokens für Größe, Farben, Hover und Focus. Ein natives Checkbox-Element wird als verstecktes `<input>` beibehalten (A11y), visuell aber durch ein gestyltes Element ersetzt. So bleibt die native Keyboard- und Screen-Reader-Funktionalität erhalten.
+- **Kein Debounce auf Toggle:** Wie in der Spec beschrieben – schnelles Doppelklicken führt einfach zu zweimaligem Toggle (idempotentes Verhalten). Kein extra Handling nötig.
+- **Strikethrough + Farbwechsel über CSS-Klasse:** Eine einzige CSS-Klasse (z.B. `.task-completed`) schaltet `text-decoration: line-through` und `color: var(--color-text-disabled)` gleichzeitig um.
+
+### Security-Anforderungen
+
+- Identisch zu FEAT-1 – keine neuen Security-relevanten Aspekte. Boolean-Toggle auf Client-State ist unkritisch.
+
+### Dependencies
+
+Keine neuen Packages. Die Checkbox wird als reine React-Komponente mit CSS gebaut.
+
+### Test-Setup
+
+- **Unit Tests:**
+  - Checkbox-Toggle: Klick wechselt `completed` von `false` auf `true` und zurück
+  - Neuer Task startet mit `completed: false`
+  - Toggle ändert nicht die Listenposition
+
+- **Integration Tests:**
+  - Toggle-Flow: Checkbox klicken → Strikethrough erscheint → erneut klicken → Strikethrough verschwindet
+  - Toggle + Edit: Task als erledigt markieren → Titel bearbeiten → Status bleibt `erledigt`
+  - Toggle + Delete: Erledigten Task löschen → Task ist weg
+
+- **E2E Tests:**
+  - Happy Path: 3 Tasks erstellen → 2 als erledigt markieren → einen wieder öffnen → korrekter visueller Zustand
+  - Keyboard: Tab zur Checkbox → Space zum Toggeln → Status wechselt
+
+Test-Framework: Vitest + React Testing Library (wie FEAT-1).
