@@ -1,7 +1,7 @@
 # FEAT-1: Task-CRUD
 
 ## Status
-Aktueller Schritt: Tech
+Aktueller Schritt: Dev
 
 ## Abhängigkeiten
 - Benötigt: Keine
@@ -226,3 +226,29 @@ Keine neuen Packages nötig. Alles wird mit React-Bordmitteln und nativen Browse
   - Empty State: App öffnen → Hinweistext sichtbar → Task erstellen → Hinweistext verschwindet
 
 Test-Framework: Vitest (kommt mit Vite) + React Testing Library für Component-Tests.
+
+---
+
+## 4. Implementierung
+*Ausgefüllt von: /red:proto-dev — 2026-04-02*
+
+### Implementierte Dateien
+- `projekt/src/types.ts` – Task-Interface (id, title, createdAt)
+- `projekt/src/components/TaskPage.tsx` – Container mit State-Management (useState für tasks + editingId)
+- `projekt/src/components/TaskPage.css` – Layout: zentrierte Card auf Page-Background
+- `projekt/src/components/TaskCreate.tsx` – Create-Input mit Enter-Handler und Whitespace-Validierung
+- `projekt/src/components/TaskCreate.css` – Input-Styling nach DS (default, md)
+- `projekt/src/components/TaskList.tsx` – Listenrendering oder Empty State
+- `projekt/src/components/TaskList.css` – Reset-Styles für ul
+- `projekt/src/components/TaskItem.tsx` – Zeile mit Anzeige-/Edit-Modus, Delete-Button, Keyboard-Navigation
+- `projekt/src/components/TaskItem.css` – Inline-Edit, Danger-Delete, Hover/Focus-States
+- `projekt/src/components/TaskEmpty.tsx` – Hinweistext "Noch keine Aufgaben – leg los!"
+- `projekt/src/components/TaskEmpty.css` – Zentrierter Hinweistext
+- `projekt/src/index.css` – Alle DS-Tokens als CSS Custom Properties + Global Reset
+- `projekt/src/App.tsx` – Ersetzt Vite-Scaffold durch TaskPage
+
+### Installierte Dependencies
+- Keine – alles mit React-Bordmitteln (useState, crypto.randomUUID())
+
+### Offene Punkte / Tech-Debt
+- TaskItem ist ein Tokens-Build (keine DS-Komponenten-Spec) – dokumentiert in UX-Abschnitt als genehmigt

@@ -1,0 +1,11 @@
+.task-empty {
+  padding: var(--spacing-8) var(--spacing-4);
+  text-align: center;
+}
+
+.task-empty__text {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
