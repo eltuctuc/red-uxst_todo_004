@@ -8,6 +8,19 @@
   min-height: 44px;
 }
 
+/* BUG-FEAT2-QA-005 fix: Label-Text visuell versteckt – Screen Reader liest ihn über htmlFor/id-Binding */
+.checkbox__label-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Native input hidden – a11y bleibt erhalten */
 .checkbox__input {
   position: absolute;

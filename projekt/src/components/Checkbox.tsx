@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import './Checkbox.css'
 
 interface CheckboxProps {
@@ -7,15 +8,18 @@ interface CheckboxProps {
 }
 
 export function Checkbox({ checked, label, onChange }: CheckboxProps) {
+  const id = useId()
   return (
-    <label className="checkbox">
+    <label className="checkbox" htmlFor={id}>
       <input
+        id={id}
         className="checkbox__input"
         type="checkbox"
         checked={checked}
-        aria-label={label}
         onChange={onChange}
       />
+      {/* BUG-FEAT2-QA-005 fix: label text als visually-hidden Span statt aria-label auf Input */}
+      <span className="checkbox__label-text">{label}</span>
       <span className={`checkbox__box${checked ? ' checkbox__box--checked' : ''}`} aria-hidden="true">
         {checked && (
           <svg width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden="true">
