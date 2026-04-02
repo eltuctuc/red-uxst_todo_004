@@ -27,7 +27,10 @@
       "Bash(mv BUG-FEAT1-QA-006.md BUG-FEAT1-QA-006-fixed.md)",
       "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/features/FEAT-2*.md)",
       "Bash(git -C /Users/enricoreinsdorf/Projekte/ux-stammtisch_004 log --oneline -5)",
-      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/projekt/src/components/*.tsx)"
+      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/projekt/src/components/*.tsx)",
+      "Bash(cat /Users/enricoreinsdorf/Projekte/ux-stammtisch_004/features/FEAT-3*.md)",
+      "Bash(ls:*)",
+      "Bash(npm version:*)"
     ]
   },
   "disabledMcpjsonServers": [

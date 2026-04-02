@@ -1,7 +1,7 @@
 # FEAT-3: Persistenz
 
 ## Status
-Aktueller Schritt: Dev
+Aktueller Schritt: Done
 
 ## Abhängigkeiten
 - Benötigt: FEAT-1 (Task-CRUD) – Task-Datenstruktur muss definiert sein
@@ -203,3 +203,51 @@ Keine – `localStorage` ist native Browser-API.
 
 ### Offene Punkte / Tech-Debt
 Keine.
+
+---
+
+## 5. QA Ergebnisse
+*Ausgefüllt von: /red:proto-qa — 2026-04-02 (Runde 1) / 2026-04-02 (Runde 2)*
+
+### Acceptance Criteria Status
+- [x] AC-1: Alle Tasks werden nach jeder Änderung automatisch gespeichert ✅
+- [x] AC-2: Beim App-Start werden Tasks aus localStorage geladen ✅
+- [x] AC-3: Nach Seiten-Reload sind alle Tasks identisch zur vorherigen Session ✅
+- [x] AC-4: Erster Start ohne localStorage-Eintrag → leere Task-Liste ✅
+- [x] AC-5: Nicht-parsebare Daten → Silent Reset ✅ (BUG-FEAT3-QA-001 + QA-002 gefixt)
+- [x] AC-6: Kein expliziter Speichern-Button ✅
+
+### Security-Check
+- Kein XSS-Risiko – `dangerouslySetInnerHTML` wird nicht verwendet, React escaped Task-Titel standardmäßig
+- localStorage-Scope durch Same-Origin-Policy korrekt begrenzt
+- Keine sensiblen Daten
+
+### A11y-Check
+- Reset-Banner: `role="alert"` korrekt, Close-Button mit `aria-label` vorhanden
+- Touch-Target des Close-Buttons zu klein (20px < WCAG 44px) → BUG-FEAT3-UX-005
+- Bestehende A11y-Fixes aus FEAT-1/FEAT-2 durch die Änderungen nicht beeinträchtigt
+
+### Regression
+- FEAT-1 und FEAT-2 nicht beeinträchtigt – alle Handler korrekt vorhanden und weitergegeben
+- editingId-Reset-Fix bei handleDelete weiterhin korrekt implementiert
+
+### Bug-Status nach Runde 3
+- BUG-FEAT3-QA-001 – Fixed ✅ (Array.isArray-Check implementiert)
+- BUG-FEAT3-QA-002 – Fixed ✅ (Filter auf Pflichtfelder implementiert)
+- BUG-FEAT3-QA-003 – Open (Low) – redundanter useEffect-Write auf initialem Render
+- BUG-FEAT3-QA-004 – Open (Low) – useState als Einweg-Initializer mit Side-Effect, Strict Mode Double-Invoke
+- BUG-FEAT3-QA-005 – Open (Low) – Filter ohne wasReset bei strukturell ungültigen Array-Elementen
+- BUG-FEAT3-QA-006 – Fixed ✅ (width/height: 44px statt padding-basierter Ansatz bei border-box)
+- BUG-FEAT3-UX-001 – Fixed ✅
+- BUG-FEAT3-UX-002 – Open (Low) – kein Hinweis auf automatisches Speichern
+- BUG-FEAT3-UX-003 – Open (Low) – Alert-Banner fehlt DS-konformes Icon
+- BUG-FEAT3-UX-004 – Fixed ✅ (persistentes Banner, kein Auto-Dismiss)
+- BUG-FEAT3-UX-005 – Fixed ✅ (Teil von QA-006-Fix)
+- BUG-FEAT3-UX-006 – Fixed ✅ (wasReset bei partiellem Task-Verlust gesetzt)
+
+### Summary (Runde 3)
+- ✅ 6/6 Acceptance Criteria passed
+- ❌ 3 Bugs offen (0 Critical, 0 High, 0 Medium, 3 Low)
+
+### Production-Ready
+✅ Ready – keine Critical/High/Medium Bugs offen

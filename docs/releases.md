@@ -1,5 +1,20 @@
 # Release History
 
+## 2026-04-02 – v0.2.0
+### Neue Features
+- **FEAT-3 – Persistenz:** Automatisches Speichern aller Tasks im localStorage; transparentes Laden beim App-Start; Reset-Banner bei korrupten oder teilweise ungültigen Daten.
+
+### Bug Fixes
+- **BUG-FEAT3-QA-001:** Array.isArray-Check verhindert Absturz bei nicht-Array JSON *(Severity: Medium)*
+- **BUG-FEAT3-QA-002:** Filter entfernt strukturell ungültige Task-Objekte beim Laden *(Severity: Medium)*
+- **BUG-FEAT3-QA-006:** Touch-Target Close-Button auf 44×44px korrigiert (border-box Fix) *(Severity: Medium)*
+- **BUG-FEAT3-UX-001:** Reset-Banner bei vollständigem Datenverlust implementiert *(Severity: Medium)*
+- **BUG-FEAT3-UX-004:** Auto-Dismiss Banner entfernt – Banner bleibt persistent bis User-Close *(Severity: Medium)*
+- **BUG-FEAT3-UX-005:** Close-Button WCAG Touch-Target gefixt (Teil von QA-006) *(Severity: Medium)*
+- **BUG-FEAT3-UX-006:** wasReset auch bei partiellem Task-Verlust gesetzt – Banner erscheint nun auch wenn einzelne Tasks gefiltert werden *(Severity: Medium)*
+
+---
+
 ## 2026-04-02 – v0.1.0
 ### Neue Features
 - **FEAT-2 – Task-Status Toggle:** Checkbox pro Task zum Markieren als erledigt/offen; visuelles Feedback via Strikethrough und reduziertem Kontrast.

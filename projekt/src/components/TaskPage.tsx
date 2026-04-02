@@ -25,7 +25,8 @@ function loadTasksFromStorage(): { tasks: Task[]; wasReset: boolean } {
         typeof item.title === 'string' &&
         typeof item.completed === 'boolean'
     )
-    return { tasks: validTasks, wasReset: false }
+    // BUG-FEAT3-UX-006: Set wasReset if any tasks were filtered out (partial loss)
+    return { tasks: validTasks, wasReset: validTasks.length < parsed.length }
   } catch {
     localStorage.removeItem(STORAGE_KEY)
     return { tasks: [], wasReset: true }
