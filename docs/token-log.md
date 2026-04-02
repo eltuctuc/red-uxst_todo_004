@@ -23,3 +23,12 @@ Protokoll aller Aufgaben in diesem Projekt. Da Token-Zahlen bei Subscription-Pl�
 | 2026-04-02 | /red:proto-qa – FEAT-2 QA Runde 1 (3 QA + 5 UX Bugs) | L |
 | 2026-04-02 | /red:proto-dev – FEAT-2 Bug Fixes (Runde 1, 7 Bugs) | L |
 | 2026-04-02 | /red:proto-qa – FEAT-2 QA Runde 2 (Retest + 5 neue Bugs) | L |
+
+## 2026-04-02 – /red:proto-qa FEAT-3 Runde 3 + Fixes
+
+| Phase | Agent | Tokens (geschätzt) |
+|-------|-------|--------------------|
+| QA-Engineer (Runde 3) | Subagent | ~36.500 |
+| UX-Reviewer (Runde 3) | Subagent | ~36.800 |
+| Orchestrator + Fixes | Main | ~25.000 |
+| **Gesamt** | | **~98.300** |
